@@ -1353,14 +1353,9 @@ body { background: #fff !important; color: #000 !important; }
 <section class="card-dark" id="sec5">
 <div class="row gap-3 items-center mb-2"><span class="section-num">5</span>
 <div><h2 class="section-title">Sono, saúde mental e recuperação</h2><p class="section-sub">Sono e estresse influenciam fome, energia e ganho muscular.</p></div></div>
-<div class="grid-2 mt-3">
 <div class="field"><label id="lbl_sono">Qualidade do sono<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="sono" aria-labelledby="lbl_sono"></div>
+<div class="scale-group" data-scale="sono" data-name="qualidade_sono" aria-labelledby="lbl_sono"></div>
 <div class="scale-labels"><span>Muito ruim</span><span>Excelente</span></div><div class="field-error">Escolha uma nota.</div></div>
-<div class="field"><label id="lbl_estresse">Nível de estresse<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="estresse" aria-labelledby="lbl_estresse"></div>
-<div class="scale-labels"><span>Baixo</span><span>Muito alto</span></div><div class="field-error">Escolha uma nota.</div></div>
-</div>
 <div class="grid-3 mt-3">
 <div class="field"><label for="horasSono">Horas de sono por noite</label>
 <input class="input" type="number" step="0.5" id="horasSono" placeholder="7"></div>
@@ -1384,14 +1379,7 @@ body { background: #fff !important; color: #000 !important; }
 <div class="field"><label for="tratamentoMentalDet">Detalhes (se sim)</label>
 <input class="input" id="tratamentoMentalDet" placeholder="Ex.: Acompanhado por psicóloga"></div>
 </div>
-<div class="grid-2 mt-3">
-<div class="field"><label id="lbl_recuperacao">Recuperação muscular percebida</label>
-<div class="scale-group" data-scale="recuperacao" aria-labelledby="lbl_recuperacao"></div>
-<div class="scale-labels"><span>Lenta</span><span>Rápida</span></div></div>
-<div class="field"><label id="lbl_energia">Energia no dia a dia</label>
-<div class="scale-group" data-scale="energia" aria-labelledby="lbl_energia"></div>
-<div class="scale-labels"><span>Exausto</span><span>Muita energia</span></div></div>
-</div>
+
 <div class="field mt-3"><label for="dores">Dores ou lesões atuais</label>
 <textarea class="input" id="dores" rows="2" placeholder="Ex.: Dor lombar leve ao levantar peso. Ou deixe em branco se não houver."></textarea></div>
 </section>
@@ -1413,7 +1401,7 @@ body { background: #fff !important; color: #000 !important; }
 </div><div class="field-error">Escolha pelo menos um local.</div></div>
 <div class="grid-3 mt-3">
 <div class="field"><label>Frequência desejada (x/semana)<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="freq" data-max="6" data-min="2" style="grid-template-columns: repeat(5,1fr);"></div>
+<div class="scale-group" data-scale="freq" data-name="frequencia_semana" data-max="6" data-min="2" style="grid-template-columns: repeat(5,1fr);"></div>
 <div class="field-helper">Escolha de 2 a 6 vezes por semana.</div><div class="field-error">Escolha a frequência.</div></div>
 <div class="field"><label for="tempoSessao">Tempo por sessão (min)<span class="req-mark">*</span></label>
 <input class="input req" type="number" id="tempoSessao" placeholder="60"><div class="field-error">Informe o tempo.</div></div>
@@ -1451,7 +1439,7 @@ body { background: #fff !important; color: #000 !important; }
 <div><h2 class="section-title">Nutrição e hábitos alimentares</h2><p class="section-sub">Sem julgamento: queremos saber a sua rotina real, não a ideal.</p></div></div>
 <div class="grid-3 mt-3">
 <div class="field"><label>Refeições por dia<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="refeicoes" data-min="2" data-max="6" style="grid-template-columns: repeat(5,1fr);"></div>
+<div class="scale-group" data-scale="refeicoes" data-name="refeicoes_dia" data-min="2" data-max="6" style="grid-template-columns: repeat(5,1fr);"></div>
 <div class="field-helper">Escolha de 2 a 6.</div><div class="field-error">Escolha a quantidade.</div></div>
 </div>
 <div class="grid-2 mt-3">
@@ -1751,8 +1739,7 @@ persist(); updateProgress();
 
 /* Scales 1-5 */
 var scaleConfig = {
-sono: { min: 1, max: 5 }, estresse: { min: 1, max: 5 },
-recuperacao: { min: 1, max: 5 }, energia: { min: 1, max: 5 },
+sono: { min: 1, max: 5 },
 freq: { min: 2, max: 6 }, refeicoes: { min: 2, max: 6 }
 };
 $all('[data-scale]').forEach(function (el) {
@@ -1767,12 +1754,16 @@ b.type = 'button';
 b.className = 'scale-btn';
 b.textContent = n;
 b.setAttribute('data-target', groupKey);
+b.setAttribute('data-name', el.getAttribute('data-name') || groupKey);
 b.setAttribute('aria-label', 'Nota ' + n + ' para ' + groupKey);
+b.setAttribute('aria-pressed', state[groupKey] === n ? 'true' : 'false');
 if (state[groupKey] === n) b.classList.add('active');
 b.addEventListener('click', function () {
 state[groupKey] = (state[groupKey] === n) ? '' : n;
 $all('.scale-btn', groupEl).forEach(function (x) {
-x.classList.toggle('active', state[groupKey] === Number(x.textContent));
+var on = state[groupKey] === Number(x.textContent);
+x.classList.toggle('active', on);
+x.setAttribute('aria-pressed', on ? 'true' : 'false');
 });
 persist(); updateProgress();
 });
@@ -1839,7 +1830,6 @@ var REQUIRED = [
 { group: 'alimentacao', single: true },
 { group: 'atividade', single: true },
 { scale: 'sono' },
-{ scale: 'estresse' },
 { scale: 'freq' },
 { scale: 'refeicoes' },
 { aceite: true }
@@ -1990,11 +1980,10 @@ out.push(line('Qualidade do sono', sc('sono')));
 out.push(line('Horas de sono', val('horasSono')));
 out.push(line('Horário de dormir / acordar', (val('horaDormir') || '—') + ' / ' + (val('horaAcordar') || '—')));
 out.push(line('Dificuldades de sono', arr(state.sonoDif)));
-out.push(line('Nível de estresse', sc('estresse')));
+
 out.push(line('Ansiedade/depressão em tratamento', state.tratamentoMental));
 if (state.tratamentoMental === 'Sim') out.push(line('Detalhes', val('tratamentoMentalDet')));
-out.push(line('Recuperação muscular', sc('recuperacao')));
-out.push(line('Energia no dia a dia', sc('energia')));
+
 out.push(line('Dores ou lesões atuais', val('dores')));
 out.push('');
 out.push('6. HISTÓRICO E ROTINA DE TREINO');
