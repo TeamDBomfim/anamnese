@@ -1104,6 +1104,9 @@ transition: all 0.15s ease; user-select: none;
 }
 .chip:hover { border-color: var(--accent); }
 .chip.active { background: var(--accent); color: #0B0B0B; border-color: var(--accent); font-weight: 700; }
+.chip:has(input[type=checkbox]:checked) { background: var(--accent); color: #0B0B0B; border-color: var(--accent); font-weight: 700; }
+.chip input[type=checkbox] { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+.chip:focus-within { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .scale-group { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .scale-btn {
 cursor: pointer; border: 1px solid #3a3a3a; background: #1A1A1A; color: #fff;
@@ -1240,7 +1243,7 @@ body { background: #fff !important; color: #000 !important; }
 <!-- 2. OBJETIVO -->
 <section class="card-dark" id="sec2">
 <div class="row gap-3 items-center mb-2"><span class="section-num">2</span>
-<div><h2 class="section-title">Objetivo e expectativas</h2><p class="section-sub">Conte o que você quer conquistar e como enxerga seu treino.</p></div></div>
+<div><h2 class="section-title">Objetivo</h2><p class="section-sub">Conte o que você quer conquistar e como enxerga seu treino.</p></div></div>
 <div class="field mt-3"><label>Objetivo principal<span class="req-mark">*</span></label>
 <div class="field-helper">Escolha um ou mais.</div>
 <div class="chip-group mt-2" data-group="objetivo" data-single="false">
@@ -1309,21 +1312,18 @@ body { background: #fff !important; color: #000 !important; }
 <div id="cirurgiasList" class="mt-2"></div>
 <button type="button" class="btn" data-variant="outline" data-size="sm" id="addCirurgia">+ Adicionar cirurgia</button></div>
 
-<div class="grid-2 mt-3">
-<div class="field"><label for="internacoes">Internações recentes</label>
-<input class="input" id="internacoes" placeholder="Ex.: Apendicite em 2023 — ou deixe em branco"></div>
-<div class="field"><label for="alergias">Alergias e intolerâncias alimentares</label>
+<div class="field mt-3"><label for="alergias">Alergias e intolerâncias alimentares</label>
 <input class="input" id="alergias" placeholder="Ex.: Lactose, amendoim"></div>
-</div>
 
 <div class="field mt-3"><label>Histórico familiar</label>
-<div class="chip-group mt-2" data-group="familia" data-single="false">
-<button type="button" class="chip" data-value="Doenças cardíacas">Doenças cardíacas</button>
-<button type="button" class="chip" data-value="Diabetes">Diabetes</button>
-<button type="button" class="chip" data-value="Obesidade">Obesidade</button>
-<button type="button" class="chip" data-value="Hipertensão">Hipertensão</button>
-<button type="button" class="chip" data-value="Câncer">Câncer</button>
-<button type="button" class="chip" data-value="Nenhum">Nenhum</button>
+<div class="field-helper">Marque todas as opções que se aplicam.</div>
+<div class="chip-group mt-2">
+<label class="chip"><input type="checkbox" name="familia_cardiacas" value="Doenças cardíacas" style="position:absolute;opacity:0;pointer-events:none;"> Doenças cardíacas</label>
+<label class="chip"><input type="checkbox" name="familia_diabetes" value="Diabetes" style="position:absolute;opacity:0;pointer-events:none;"> Diabetes</label>
+<label class="chip"><input type="checkbox" name="familia_obesidade" value="Obesidade" style="position:absolute;opacity:0;pointer-events:none;"> Obesidade</label>
+<label class="chip"><input type="checkbox" name="familia_hipertensao" value="Hipertensão" style="position:absolute;opacity:0;pointer-events:none;"> Hipertensão</label>
+<label class="chip"><input type="checkbox" name="familia_cancer" value="Câncer" style="position:absolute;opacity:0;pointer-events:none;"> Câncer</label>
+<label class="chip"><input type="checkbox" name="familia_nenhum" value="Nenhum" style="position:absolute;opacity:0;pointer-events:none;"> Nenhum</label>
 </div></div>
 
 <div class="field mt-3"><label>Medicamentos em uso</label>
@@ -1354,11 +1354,11 @@ body { background: #fff !important; color: #000 !important; }
 <div class="row gap-3 items-center mb-2"><span class="section-num">5</span>
 <div><h2 class="section-title">Sono, saúde mental e recuperação</h2><p class="section-sub">Sono e estresse influenciam fome, energia e ganho muscular.</p></div></div>
 <div class="grid-2 mt-3">
-<div class="field"><label>Qualidade do sono<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="sono"></div>
+<div class="field"><label id="lbl_sono">Qualidade do sono<span class="req-mark">*</span></label>
+<div class="scale-group" data-scale="sono" aria-labelledby="lbl_sono"></div>
 <div class="scale-labels"><span>Muito ruim</span><span>Excelente</span></div><div class="field-error">Escolha uma nota.</div></div>
-<div class="field"><label>Nível de estresse<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="estresse"></div>
+<div class="field"><label id="lbl_estresse">Nível de estresse<span class="req-mark">*</span></label>
+<div class="scale-group" data-scale="estresse" aria-labelledby="lbl_estresse"></div>
 <div class="scale-labels"><span>Baixo</span><span>Muito alto</span></div><div class="field-error">Escolha uma nota.</div></div>
 </div>
 <div class="grid-3 mt-3">
@@ -1385,11 +1385,11 @@ body { background: #fff !important; color: #000 !important; }
 <input class="input" id="tratamentoMentalDet" placeholder="Ex.: Acompanhado por psicóloga"></div>
 </div>
 <div class="grid-2 mt-3">
-<div class="field"><label>Recuperação muscular percebida</label>
-<div class="scale-group" data-scale="recuperacao"></div>
+<div class="field"><label id="lbl_recuperacao">Recuperação muscular percebida</label>
+<div class="scale-group" data-scale="recuperacao" aria-labelledby="lbl_recuperacao"></div>
 <div class="scale-labels"><span>Lenta</span><span>Rápida</span></div></div>
-<div class="field"><label>Energia no dia a dia</label>
-<div class="scale-group" data-scale="energia"></div>
+<div class="field"><label id="lbl_energia">Energia no dia a dia</label>
+<div class="scale-group" data-scale="energia" aria-labelledby="lbl_energia"></div>
 <div class="scale-labels"><span>Exausto</span><span>Muita energia</span></div></div>
 </div>
 <div class="field mt-3"><label for="dores">Dores ou lesões atuais</label>
@@ -1420,17 +1420,7 @@ body { background: #fff !important; color: #000 !important; }
 <div class="field"><label for="horarioPref">Horário preferido</label>
 <select class="input" id="horarioPref"><option value="">Selecione</option><option>Manhã cedo</option><option>Manhã</option><option>Almoço</option><option>Tarde</option><option>Noite</option></select></div>
 </div>
-<div class="field mt-3"><label>Dias disponíveis</label>
-<div class="field-helper">Marque todos os dias em que pode treinar.</div>
-<div class="chip-group mt-2" data-group="dias" data-single="false">
-<button type="button" class="chip" data-value="Seg">Seg</button>
-<button type="button" class="chip" data-value="Ter">Ter</button>
-<button type="button" class="chip" data-value="Qua">Qua</button>
-<button type="button" class="chip" data-value="Qui">Qui</button>
-<button type="button" class="chip" data-value="Sex">Sex</button>
-<button type="button" class="chip" data-value="Sáb">Sáb</button>
-<button type="button" class="chip" data-value="Dom">Dom</button>
-</div></div>
+
 <div class="field mt-3"><label for="acompAnterior">Já teve personal ou nutricionista?</label>
 <input class="input" id="acompAnterior" placeholder="Ex.: Personal por 6 meses em 2022"></div>
 <div class="grid-2 mt-3">
@@ -1440,17 +1430,18 @@ body { background: #fff !important; color: #000 !important; }
 <input class="input" id="naoGosta" placeholder="Ex.: Burpee"></div>
 </div>
 <div class="field mt-3"><label>Qual grupamento muscular você quer enfatizar?</label>
-<div class="chip-group mt-2" data-group="grupamento" data-single="false">
-<button type="button" class="chip" data-value="Peitoral">Peitoral</button>
-<button type="button" class="chip" data-value="Costas">Costas</button>
-<button type="button" class="chip" data-value="Ombros">Ombros</button>
-<button type="button" class="chip" data-value="Bíceps">Bíceps</button>
-<button type="button" class="chip" data-value="Tríceps">Tríceps</button>
-<button type="button" class="chip" data-value="Pernas (quadríceps)">Pernas (quadríceps)</button>
-<button type="button" class="chip" data-value="Posterior de coxa">Posterior de coxa</button>
-<button type="button" class="chip" data-value="Glúteos">Glúteos</button>
-<button type="button" class="chip" data-value="Panturrilha">Panturrilha</button>
-<button type="button" class="chip" data-value="Abdômen/Core">Abdômen/Core</button>
+<div class="field-helper">Marque todos os que quiser.</div>
+<div class="chip-group mt-2">
+<label class="chip"><input type="checkbox" name="musculos_peito" value="Peitoral" style="position:absolute;opacity:0;pointer-events:none;"> Peitoral</label>
+<label class="chip"><input type="checkbox" name="musculos_costas" value="Costas" style="position:absolute;opacity:0;pointer-events:none;"> Costas</label>
+<label class="chip"><input type="checkbox" name="musculos_ombros" value="Ombros" style="position:absolute;opacity:0;pointer-events:none;"> Ombros</label>
+<label class="chip"><input type="checkbox" name="musculos_biceps" value="Bíceps" style="position:absolute;opacity:0;pointer-events:none;"> Bíceps</label>
+<label class="chip"><input type="checkbox" name="musculos_triceps" value="Tríceps" style="position:absolute;opacity:0;pointer-events:none;"> Tríceps</label>
+<label class="chip"><input type="checkbox" name="musculos_quadriceps" value="Pernas (quadríceps)" style="position:absolute;opacity:0;pointer-events:none;"> Pernas (quadríceps)</label>
+<label class="chip"><input type="checkbox" name="musculos_posterior" value="Posterior de coxa" style="position:absolute;opacity:0;pointer-events:none;"> Posterior de coxa</label>
+<label class="chip"><input type="checkbox" name="musculos_gluteos" value="Glúteos" style="position:absolute;opacity:0;pointer-events:none;"> Glúteos</label>
+<label class="chip"><input type="checkbox" name="musculos_panturrilha" value="Panturrilha" style="position:absolute;opacity:0;pointer-events:none;"> Panturrilha</label>
+<label class="chip"><input type="checkbox" name="musculos_core" value="Abdômen/Core" style="position:absolute;opacity:0;pointer-events:none;"> Abdômen/Core</label>
 </div></div>
 </section>
 
@@ -1524,14 +1515,6 @@ body { background: #fff !important; color: #000 !important; }
 <div class="field"><label for="quemPrepara">Quem prepara as refeições?</label><input class="input" id="quemPrepara" placeholder="Ex.: Eu mesmo, marmitas da semana"></div>
 <div class="field"><label for="dietaAnterior">Já fez dieta? Qual e por quanto tempo?</label><input class="input" id="dietaAnterior" placeholder="Ex.: Low carb, 3 meses"></div>
 </div>
-<div class="grid-2 mt-3">
-<div class="field"><label>Efeito rebote após dietas?</label>
-<div class="chip-group" data-group="rebote" data-single="true">
-<button type="button" class="chip" data-value="Não">Não</button>
-<button type="button" class="chip" data-value="Sim">Sim</button>
-</div></div>
-<div class="field"><label for="reboteDet">Detalhes (se sim)</label><input class="input" id="reboteDet" placeholder="Ex.: Recuperei o peso em 2 meses"></div>
-</div>
 </section>
 
 <!-- 8. FOTOS -->
@@ -1564,69 +1547,11 @@ body { background: #fff !important; color: #000 !important; }
 <div class="field"><label for="energiaHoras">Horário de maior energia</label>
 <input class="input" id="energiaHoras" placeholder="Ex.: Entre 17h e 20h"></div>
 </div>
-<div class="grid-2 mt-3">
-<div class="field"><label for="viagens">Viagens frequentes?</label><input class="input" id="viagens" placeholder="Ex.: 1 viagem por mês"></div>
-<div class="field"><label for="autocuidado">Rotina de autocuidado</label><input class="input" id="autocuidado" placeholder="Ex.: Caminhada no domingo"></div>
-</div>
 </section>
 
-<!-- 9. EXAMES -->
-<section class="card-dark" id="sec9">
-<div class="row gap-3 items-center mb-2"><span class="section-num">10</span>
-<div><h2 class="section-title">Exames e documentação</h2><p class="section-sub">Resultados recentes ajudam a ajustar o plano com segurança.</p></div></div>
-<div class="grid-2 mt-3">
-<div class="field"><label>Exames de sangue recentes?</label>
-<div class="chip-group" data-group="examesRecentes" data-single="true">
-<button type="button" class="chip" data-value="Não">Não</button>
-<button type="button" class="chip" data-value="Sim">Sim</button>
-</div></div>
-<div class="field"><label for="examesData">Data do exame</label><input class="input" type="date" id="examesData"></div>
-</div>
-<div class="field mt-3"><label for="examesResultados">Principais resultados</label>
-<textarea class="input" id="examesResultados" rows="3" placeholder="Ex.: Glicemia 92 mg/dL, HbA1c 5,4%, LDL 118, TSH 2,1, vitamina D 28 ng/mL, ferritina 45."></textarea>
-<div class="field-helper">Hemograma, glicemia, insulina, HbA1c, lipídico, TSH/T4, creatinina, ureia, TGO/TGP, vitamina D, B12, ferritina, ácido úrico, sódio e potássio.</div></div>
-<div class="grid-2 mt-3">
-<div class="field"><label for="laudo">Laudo com contraindicação ou restrição?</label>
-<input class="input" id="laudo" placeholder="Ex.: Restrição de impacto por 3 meses"></div>
-<div class="field"><label for="prescricaoExerc">Prescrição de exercício médico</label>
-<input class="input" id="prescricaoExerc" placeholder="Ex.: Caminhada 30 min, 3x/semana"></div>
-</div>
-</section>
-
-<!-- 10. COMPROMETIMENTO -->
+<!-- 10. CONSENTIMENTO -->
 <section class="card-dark" id="sec10">
-<div class="row gap-3 items-center mb-2"><span class="section-num">11</span>
-<div><h2 class="section-title">Expectativas e comprometimento</h2><p class="section-sub">Adesão é o que mais define resultado. Seja honesto(a) aqui.</p></div></div>
-<div class="grid-2 mt-3">
-<div class="field"><label for="tempoSemana">Horas por semana para o plano</label>
-<input class="input" type="number" id="tempoSemana" placeholder="5"></div>
-<div class="field"><label>Comprometimento com o plano<span class="req-mark">*</span></label>
-<div class="scale-group" data-scale="comprometimento"></div>
-<div class="scale-labels"><span>Pouco</span><span>Total</span></div><div class="field-error">Escolha uma nota.</div></div>
-</div>
-<div class="field mt-3"><label for="atrapalha">O que pode atrapalhar sua adesão?</label>
-<input class="input" id="atrapalha" placeholder="Ex.: Viagens a trabalho e falta de tempo à noite"></div>
-<div class="grid-2 mt-3">
-<div class="field"><label>Canal preferido de acompanhamento</label>
-<div class="chip-group mt-2" data-group="canal" data-single="false">
-<button type="button" class="chip" data-value="WhatsApp">WhatsApp</button>
-<button type="button" class="chip" data-value="Planilha">Planilha</button>
-<button type="button" class="chip" data-value="App">App</button>
-<button type="button" class="chip" data-value="E-mail">E-mail</button>
-</div></div>
-<div class="field"><label>Receber conteúdo educativo semanal?</label>
-<div class="chip-group" data-group="conteudo" data-single="true">
-<button type="button" class="chip" data-value="Sim">Sim</button>
-<button type="button" class="chip" data-value="Não">Não</button>
-</div></div>
-</div>
-<div class="field mt-3"><label for="infoExtra">Informação adicional que julga importante</label>
-<textarea class="input" id="infoExtra" rows="2" placeholder="Algo que eu deva saber sobre você?"></textarea></div>
-</section>
-
-<!-- 11. CONSENTIMENTO -->
-<section class="card-dark" id="sec11">
-<div class="row gap-3 items-center mb-2"><span class="section-num">12</span>
+<div class="row gap-3 items-center mb-2"><span class="section-num">10</span>
 <div><h2 class="section-title">Consentimento informado e LGPD</h2><p class="section-sub">Leia com atenção antes de enviar sua anamnese.</p></div></div>
 <div class="consent-box mt-3">
 <p class="m-0 mb-2">1. As informações de saúde e dados pessoais declarados serão usados <strong>exclusivamente para a prescrição de treino e dieta</strong>, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
@@ -1799,10 +1724,11 @@ $('addMed').addEventListener('click', function () { meds.add({ nome: '', dose: '
 $('addSup').addEventListener('click', function () { sups.add({ nome: '', dose: '', freq: '' }); });
 
 /* Chips (multi/single) */
-$all('.chip-group').forEach(function (group) {
+$all('.chip-group[data-group]').forEach(function (group) {
 var key = group.getAttribute('data-group');
 var single = group.getAttribute('data-single') === 'true';
 var values = state[key] || (single ? '' : []);
+if (!single && !Array.isArray(values)) values = values ? [values] : [];
 state[key] = values;
 $all('.chip', group).forEach(function (chip) {
 var v = chip.getAttribute('data-value');
@@ -1825,25 +1751,33 @@ persist(); updateProgress();
 
 /* Scales 1-5 */
 var scaleConfig = {
-sono: { min: 1, max: 5 }, estresse: { min: 1, max: 5 }, recuperacao: { min: 1, max: 5 },
-energia: { min: 1, max: 5 }, comprometimento: { min: 1, max: 5 },
+sono: { min: 1, max: 5 }, estresse: { min: 1, max: 5 },
+recuperacao: { min: 1, max: 5 }, energia: { min: 1, max: 5 },
 freq: { min: 2, max: 6 }, refeicoes: { min: 2, max: 6 }
 };
 $all('[data-scale]').forEach(function (el) {
 var key = el.getAttribute('data-scale');
 var cfg = scaleConfig[key];
+if (!cfg) return;
+el.innerHTML = '';
 for (var n = cfg.min; n <= cfg.max; n++) {
-(function (n) {
+(function (n, groupKey, groupEl) {
 var b = document.createElement('button');
-b.type = 'button'; b.className = 'scale-btn'; b.textContent = n;
-if (state[key] === n) b.classList.add('active');
+b.type = 'button';
+b.className = 'scale-btn';
+b.textContent = n;
+b.setAttribute('data-target', groupKey);
+b.setAttribute('aria-label', 'Nota ' + n + ' para ' + groupKey);
+if (state[groupKey] === n) b.classList.add('active');
 b.addEventListener('click', function () {
-state[key] = (state[key] === n) ? '' : n;
-$all('.scale-btn', el).forEach(function (x) { x.classList.toggle('active', state[key] === Number(x.textContent)); });
+state[groupKey] = (state[groupKey] === n) ? '' : n;
+$all('.scale-btn', groupEl).forEach(function (x) {
+x.classList.toggle('active', state[groupKey] === Number(x.textContent));
+});
 persist(); updateProgress();
 });
-el.appendChild(b);
-})(n);
+groupEl.appendChild(b);
+})(n, key, el);
 }
 });
 
@@ -1904,9 +1838,10 @@ var REQUIRED = [
 { group: 'local', single: false },
 { group: 'alimentacao', single: true },
 { group: 'atividade', single: true },
-
-{ scale: 'sono' }, { scale: 'estresse' }, { scale: 'freq' },
-{ scale: 'refeicoes' }, { scale: 'comprometimento' },
+{ scale: 'sono' },
+{ scale: 'estresse' },
+{ scale: 'freq' },
+{ scale: 'refeicoes' },
 { aceite: true }
 ];
 
@@ -1979,17 +1914,33 @@ if (isFilled(r)) { $(r.id).classList.remove('invalid'); if (e) e.classList.remov
 /* Summary generation */
 function val(id) { return ($(id) && $(id).value.trim()) || ''; }
 function line(label, v) { return label + ': ' + (v && String(v).trim() ? v : 'Não informado'); }
-function arr(a) { return a && a.length ? a.join(', ') : 'Não informado'; }
+function arr(a) { return (Array.isArray(a) && a.length) ? a.join(', ') : (typeof a === 'string' && a ? a : 'Não informado'); }
+function multi(a) { return (Array.isArray(a) && a.length) ? a.join(', ') : 'Não informado'; }
 function listItems(items, fmt) {
 if (!items || !items.length) return '  Nenhum';
 return items.map(function (it) { return '  - ' + fmt(it); }).join('\n');
 }
 function sc(key) { return state[key] ? state[key] + '/5' : 'Não informado'; }
+function getChecked(prefix) {
+return $all('input[type="checkbox"][name^="' + prefix + '_"]').filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+}
+function bindChecks(prefix) {
+var key = 'chk_' + prefix;
+if (!state[key]) state[key] = [];
+$all('input[type="checkbox"][name^="' + prefix + '_"]').forEach(function (c) {
+c.checked = state[key].indexOf(c.value) > -1;
+c.addEventListener('change', function () {
+state[key] = getChecked(prefix);
+persist(); updateProgress();
+});
+});
+}
+bindChecks('musculos');
+bindChecks('familia');
 
 function buildSummary() {
 var age = $('idadeOut').textContent;
 var imc = $('imcOut').textContent;
-var m = function (id) { return val(id) || '—'; };
 var out = [];
 out.push('ANAMNESE ONLINE — #TeamDBomfim');
 out.push('Data de emissão: ' + $('dataHoje').value.split('-').reverse().join('/'));
@@ -2006,12 +1957,12 @@ out.push(line('Cidade/Estado', val('cidade')));
 out.push(line('Profissão', val('profissao')));
 out.push(line('Instagram', val('instagram')));
 out.push('');
-out.push('2. OBJETIVO E EXPECTATIVAS');
+out.push('2. OBJETIVO');
 out.push(line('Objetivos', arr(state.objetivo)));
 out.push(line('Motivação', val('motivacao')));
 out.push(line('Nível de experiência', state.nivel));
 out.push('');
-out.push('3. DADOS CORPORAIS');
+out.push('3. DADOS CORPORAIS E BIOIMPEDÂNCIA');
 out.push(line('Peso', val('peso') ? val('peso') + ' kg' : ''));
 out.push(line('Altura', val('altura') ? val('altura') + ' cm' : ''));
 out.push(line('IMC', imc));
@@ -2022,14 +1973,10 @@ bi.forEach(function (x) { if (val(x[1])) out.push(line('Bioimpedância — ' + x
 if (val('bi_data')) out.push(line('Data do último exame', val('bi_data').split('-').reverse().join('/')));
 out.push('');
 out.push('4. HISTÓRICO DE SAÚDE');
-var doencas = (state.doencas || []).slice();
-if (doencas.indexOf('Outra') > -1 && val('outraDoenca')) doencas.push('Outra: ' + val('outraDoenca'));
-
 out.push('Cirurgias:');
 out.push(listItems((state.cirurgias || []).filter(function (c) { return c.ano || c.desc; }), function (c) { return (c.ano || 's/ano') + ' — ' + (c.desc || '—'); }));
-out.push(line('Internações recentes', val('internacoes')));
 out.push(line('Alergias/intolerâncias', val('alergias')));
-out.push(line('Histórico familiar', arr(state.familia)));
+out.push(line('Histórico familiar', multi(getChecked('familia'))));
 out.push('Medicamentos:');
 out.push(listItems((state.medicamentos || []).filter(function (c) { return c.nome; }), function (c) { return c.nome + ' — ' + (c.dose || '—') + ' — ' + (c.freq || '—'); }));
 out.push('Suplementos:');
@@ -2054,18 +2001,16 @@ out.push('6. HISTÓRICO E ROTINA DE TREINO');
 out.push(line('Já treinou antes', val('jaTreinou')));
 out.push(line('Já parou e recomeçou', val('jaParou')));
 out.push(line('Local de treino', arr(state.local)));
-out.push(line('Grupamentos a enfatizar', arr(state.grupamento)));
+out.push(line('Grupamentos a enfatizar', multi(getChecked('musculos'))));
 out.push(line('Frequência desejada', state.freq ? state.freq + 'x/semana' : ''));
 out.push(line('Tempo por sessão', val('tempoSessao') ? val('tempoSessao') + ' min' : ''));
 out.push(line('Horário preferido', val('horarioPref')));
-out.push(line('Dias disponíveis', arr(state.dias)));
-out.push(line('Acompanhamento anterior', val('acompAnterior')));
 
+out.push(line('Acompanhamento anterior', val('acompAnterior')));
 out.push(line('Exercícios que gosta', val('gosta')));
 out.push(line('Exercícios que não gosta', val('naoGosta')));
-
 out.push('');
-out.push('7. NUTRIÇÃO');
+out.push('7. NUTRIÇÃO E HÁBITOS ALIMENTARES');
 out.push(line('Refeições por dia', state.refeicoes));
 out.push(line('Café da manhã', (val('cafeHora') || '—') + ' — ' + (val('cafeQue') || '—')));
 out.push(line('Almoço', (val('almocoHora') || '—') + ' — ' + (val('almocoQue') || '—')));
@@ -2086,35 +2031,16 @@ out.push(line('Restrições alimentares', arr(state.restricoes)));
 out.push(line('Dificuldades alimentares', arr(state.dificuldadesAlim)));
 out.push(line('Quem prepara', val('quemPrepara')));
 out.push(line('Dietas anteriores', val('dietaAnterior')));
-out.push(line('Efeito rebote', state.rebote));
-if (state.rebote === 'Sim') out.push(line('Detalhes do rebote', val('reboteDet')));
 out.push('');
-out.push('8. ROTINA E HÁBITOS');
+out.push('8. ROTINA E HÁBITOS DIÁRIOS');
 out.push(line('Horas de trabalho/dia', val('trabalhoHoras')));
 out.push(line('Trabalho', val('trabalhoTipo')));
 out.push(line('Escala', val('escala')));
 out.push(line('Nível de atividade diária', state.atividade));
 out.push(line('Limitação de movimento', val('mobilidade')));
 out.push(line('Horário de maior energia', val('energiaHoras')));
-out.push(line('Viagens frequentes', val('viagens')));
-out.push(line('Autocuidado', val('autocuidado')));
 out.push('');
-out.push('9. EXAMES E DOCUMENTAÇÃO');
-out.push(line('Exames recentes', state.examesRecentes));
-out.push(line('Data do exame', val('examesData') ? val('examesData').split('-').reverse().join('/') : ''));
-out.push(line('Principais resultados', val('examesResultados')));
-out.push(line('Laudo com restrição', val('laudo')));
-out.push(line('Prescrição médica de exercício', val('prescricaoExerc')));
-out.push('');
-out.push('10. EXPECTATIVAS E COMPROMETIMENTO');
-out.push(line('Horas/semana para o plano', val('tempoSemana')));
-out.push(line('Comprometimento', sc('comprometimento')));
-out.push(line('O que pode atrapalhar', val('atrapalha')));
-out.push(line('Canal preferido', arr(state.canal)));
-out.push(line('Conteúdo educativo semanal', state.conteudo));
-out.push(line('Informação adicional', val('infoExtra')));
-out.push('');
-out.push('11. CONSENTIMENTO');
+out.push('9. CONSENTIMENTO INFORMADO E LGPD');
 out.push(line('Consentimento LGPD aceito', state.aceite ? 'Sim' : 'Não'));
 out.push(line('Responsável legal', val('responsavel')));
 out.push(line('Data', $('dataHoje').value.split('-').reverse().join('/')));
